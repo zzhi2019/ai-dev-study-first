@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呼び出し元画面</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
+    <script src="modal.js"></script> <!-- モーダル管理用のJavaScript -->
+</head>
+<body>
+    <div>
+        <h2>呼び出し元画面</h2>
+    <label for="name1">名前1: </label>
+    <input type="text" id="name1" value="名前1の入力"><br>
+    <label for="email1">メール1: </label>
+    <input type="email" id="email1" value="email@example.com"><br>
+    <label for="modalWidth">ポップアップ幅(px): </label>
+    <input type="number" id="modalWidth" value="700"><br>
+    <label for="modalHeight">ポップアップ高さ(px): </label>
+    <input type="number" id="modalHeight" value="500"><br>
+    <button id="statusButton1">ステータスボタン1</button>
+    <button id="statusButton2">ステータスボタン2</button>
+    </div>
+
+    <script>
+        // モーダルを呼び出すためのBackbone.jsビュー
+        const MainView = Backbone.View.extend({
+            el: 'body',
+
+            events: {
+                'click #statusButton1': 'openPopup1',
+                'click #statusButton2': 'openPopup2'
+            },
+
+            initialize: function() {
+                // モーダルのHTMLを読み込む
+                this.loadModal();
+            },
+
+            loadModal: function() {
+                const self = this;
+                $('#modal').remove(); // 既存のモーダルがあれば削除
+                $.get('modal.html', function(data) {
+                    $('body').append(data);
+                    self.modalView = new ModalView();
+                });
+            },
+
+            openPopup1: function() {
+                const name = $('#name1').val();
+                const email = $('#email1').val();
+                const width = $('#modalWidth').val() ? $('#modalWidth').val() + 'px' : '700px';
+                const height = $('#modalHeight').val() ? $('#modalHeight').val() + 'px' : '500px';
+                this.modalView.openModal({
+                    name1: name,
+                    email1: email,
+                    isDisabled: false,
+                    width: width,
+                    height: height
+                }, 'フォームサンプル - 呼び出し元画面 1');
+            },
+
+            openPopup2: function() {
+                const name = $('#name1').val();
+                const email = $('#email1').val();
+                const width = $('#modalWidth').val() ? $('#modalWidth').val() + 'px' : '700px';
+                const height = $('#modalHeight').val() ? $('#modalHeight').val() + 'px' : '500px';
+                this.modalView.openModal({
+                    name1: name,
+                    email1: email,
+                    isDisabled: true,
+                    width: width,
+                    height: height
+                }, 'フォームサンプル - 呼び出し元画面 2');
+            }
+        });
+
+        const mainView = new MainView();
+
+    </script>
+</body>
+</html>

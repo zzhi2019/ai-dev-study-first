@@ -1,0 +1,169 @@
+<!-- modal.html -->
+<div id="modal" class="modalPop"
+    <h2 id="modal-title">フォームサンプル</h2>
+    <button id="closeModalButton" style="float: right; cursor: pointer; color: red;">閉じる</button>
+    <form id="modal-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name1">名前1:</label>
+                <input type="text" id="name1-modal" disabled>
+            </div>
+            <div class="form-group">
+                <label for="email1">メール1:</label>
+                <input type="email" id="email1-modal" disabled>
+            </div>
+            <div class="form-group">
+                <label for="phone1">電話番号1:</label>
+                <input type="tel" id="phone1-modal" disabled>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="name2">名前2:</label>
+                <input type="text" id="name2-modal" disabled>
+            </div>
+            <div class="form-group">
+                <label for="email2">メール2:</label>
+                <input type="email" id="email2-modal" disabled>
+            </div>
+            <div class="form-group">
+                <label for="phone2">電話番号2:</label>
+                <input type="tel" id="phone2-modal" disabled>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button type="button" id="showQrBtn">QR表示</button>
+            <button type="submit" id="submitButton">送信</button>
+        </div>
+        <div id="qrPanel" style="display:none;">
+            <span id="qrClose" style="cursor: pointer; color: red; float: right;">×</span>
+            <h2>QRコード</h2>
+            <canvas id="qrCode"></canvas>
+        </div>
+    </form>
+</div>
+
+<div id="overlay"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;">
+</div>
+
+<style>
+    /* モーダル背景 */
+    #modal {
+        width: 600px;
+        height: 800px;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* モーダル内タイトル */
+    #modal-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    /* 入力フィールド */
+    .form-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+    .form-row label {
+        font-weight: bold;
+    }
+
+    .form-row input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+    }
+
+    .form-group {
+        margin-right: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* QRコードパネル */
+    #qrPanel {
+            display: none;
+            position: relative;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 250px;
+            margin-top: 10px;
+        }
+        #qrClose {
+            cursor: pointer;
+            color: red;
+            float: right;
+        }
+        #qrCode {
+            margin-top: 10px;
+            text-align: center;
+        }
+        canvas {
+            margin-top: 10px;
+            width: 100%;
+            height: auto;
+        }
+
+    /* ボタン */
+    .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+    #showQrBtn,
+    #submitButton {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #showQrBtn:hover,
+    #submitButton:hover {
+        background-color: #0056b3;
+    }
+
+    #qrClose {
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    /* オーバーレイ */
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* モーダルのスタイル */
+.modalPop {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    padding: 20px;
+}
+
+</style>

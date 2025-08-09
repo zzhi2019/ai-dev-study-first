@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>フォームサンプル</title>
+    <style>
+        .form-row {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #qrPanel {
+            display: none;
+            position: relative;
+            padding: 20px;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 250px;
+            margin-top: 10px;
+        }
+        #qrClose {
+            cursor: pointer;
+            color: red;
+            float: right;
+        }
+        #qrCode {
+            margin-top: 10px;
+            text-align: center;
+        }
+        canvas {
+            margin-top: 10px;
+            width: 100%;
+            height: auto;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        const FormView = Backbone.View.extend({
+            el: '#app',
+
+            template: _.template(`
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name1">名前1:</label>
+                            <input type="text" id="name1" name="name1">
+                        </div>
+                        <div class="form-group">
+                            <label for="email1">メール1:</label>
+                            <input type="email" id="email1" name="email1">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone1">電話番号1:</label>
+                            <input type="tel" id="phone1" name="phone1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name1">名前2:</label>
+                            <input type="text" id="name2" name="name2">
+                        </div>
+                        <div class="form-group">
+                            <label for="email1">メール2:</label>
+                            <input type="email" id="email2" name="email2">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone1">電話番号2:</label>
+                            <input type="tel" id="phone2" name="phone2">
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" id="showQrBtn">QR表示</button>
+                        <button type="submit" id="submitButton">送信</button>
+                    </div>
+                    <div id="qrPanel">
+                        <span id="qrClose">×</span>
+                        <h2>QRコード</h2>
+                        <canvas id="qrCode"></canvas>
+                    </div>
+                </form>
+            `),
+
+            initialize: function(options) {
+                this.name1 = options.name1 || '';
+                this.email1 = options.email1 || '';
+                this.isDisabled = options.isDisabled || false;
+                this.render();
+            },
+
+            render: function() {
+                this.$el.html(this.template());
+
+                // 呼び出し元から渡されたデータを設定
+                this.$('#name1').val(this.name1).prop('disabled', this.isDisabled);
+                this.$('#email1').val(this.email1).prop('disabled', this.isDisabled);
+
+                // ステータスボタン2の場合、送信ボタンを無効化
+                if (this.isDisabled) {
+                    this.$('#submitButton').prop('disabled', true);
+                }
+
+                return this;
+            },
+
+            events: {
+                'click #showQrBtn': 'generateQRCode',
+                'click #qrClose': 'closeQRCodePanel',
+                'submit': 'handleSubmit'
+            },
+
+            generateQRCode: function() {
+                const qrData = {
+                    name1: this.$('#name1').val(),
+                    email1: this.$('#email1').val(),
+                    phone1: this.$('#phone1').val()
+                };
+
+                const qr = new QRious({
+                    element: document.getElementById('qrCode'),
+                    value: JSON.stringify(qrData),
+                    size: 200
+                });
+
+                this.$('#qrPanel').show();
+                this.$('#showQrBtn').prop('disabled', true);
+            },
+
+            closeQRCodePanel: function() {
+                this.$('#qrPanel').hide();
+                this.$('#showQrBtn').prop('disabled', false);
+
+                const context = document.getElementById('qrCode').getContext('2d');
+                context.clearRect(0, 0, 200, 200);
+            },
+
+            handleSubmit: function(event) {
+                event.preventDefault();
+                alert('フォームが送信されました。');
+            }
+        });
+
+        // 呼び出し元からデータを渡す関数
+        window.initializePopup = function(name1, email1, isDisabled) {
+            document.title = "AAAAAAAAAAAAAAAAAAAAAAA";
+            new FormView({ name1, email1, isDisabled });
+        };
+    </script>
+</body>
+</html>
